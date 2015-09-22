@@ -1,25 +1,109 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ktf-1v-8qq">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Navigation Controller-->
+        <scene sceneID="h0W-Pr-avw">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="ktf-1v-8qq" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="mOh-OO-qMx">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="VK0-iM-Q1N" kind="relationship" relationship="rootViewController" id="NM2-Qg-JPS"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LoP-en-679" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-535" y="158"/>
+        </scene>
+        <!--Actor Map View Controller-->
+        <scene sceneID="bzp-ad-Mn5">
+            <objects>
+                <viewController id="VK0-iM-Q1N" customClass="ActorMapViewController" customModule="Where_Are_They_From_" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                        <viewControllerLayoutGuide type="top" id="Ak1-5B-jGI"/>
+                        <viewControllerLayoutGuide type="bottom" id="5Ep-3R-rfC"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="mEv-Gf-KEC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="oEO-Pd-V76"/>
+                    <connections>
+                        <segue destination="PVM-HC-E44" kind="presentation" identifier="ActorSearchViewController" id="UQp-lo-FiE"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CdT-um-asY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="114" y="158"/>
+        </scene>
+        <!--Actor Search View Controller-->
+        <scene sceneID="87k-cM-6nw">
+            <objects>
+                <viewController storyboardIdentifier="ActorSearchViewController" id="PVM-HC-E44" customClass="ActorSearchViewController" customModule="Where_Are_They_From_" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="qLD-Ne-miM"/>
+                        <viewControllerLayoutGuide type="bottom" id="Hfl-X0-7C0"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="NAg-kM-eg6">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="Oxz-ES-Q0F">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="AGN-Ln-3Xn"/>
+                                </constraints>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="97g-6U-bEk">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="eL9-8g-1P3"/>
+                                    <barButtonItem title="Item" id="I01-Dh-e2p"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="3mh-xI-Pib"/>
+                                </items>
+                            </toolbar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="5BZ-Wa-ol1">
+                                <rect key="frame" x="0.0" y="64" width="600" height="492"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActorSeachCell" id="Dbc-6Z-NL7">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Dbc-6Z-NL7" id="I0y-hT-Z5m">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="5BZ-Wa-ol1" firstAttribute="leading" secondItem="NAg-kM-eg6" secondAttribute="leadingMargin" constant="-16" id="6JH-eX-YAe"/>
+                            <constraint firstItem="5BZ-Wa-ol1" firstAttribute="top" secondItem="Oxz-ES-Q0F" secondAttribute="bottom" id="Fea-Pe-4ZK"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Oxz-ES-Q0F" secondAttribute="trailing" constant="-16" id="JhP-kY-BSp"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="5BZ-Wa-ol1" secondAttribute="trailing" constant="-16" id="Kz1-GY-e45"/>
+                            <constraint firstItem="Oxz-ES-Q0F" firstAttribute="top" secondItem="qLD-Ne-miM" secondAttribute="bottom" id="LiL-Yp-6xD"/>
+                            <constraint firstItem="97g-6U-bEk" firstAttribute="top" secondItem="5BZ-Wa-ol1" secondAttribute="bottom" id="b7t-7n-jtH"/>
+                            <constraint firstItem="Oxz-ES-Q0F" firstAttribute="leading" secondItem="NAg-kM-eg6" secondAttribute="leadingMargin" constant="-16" id="gVz-tH-nRi"/>
+                            <constraint firstItem="Hfl-X0-7C0" firstAttribute="top" secondItem="97g-6U-bEk" secondAttribute="bottom" id="hAi-iT-9wd"/>
+                            <constraint firstItem="97g-6U-bEk" firstAttribute="leading" secondItem="NAg-kM-eg6" secondAttribute="leadingMargin" constant="-16" id="nVi-Jx-Laj"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="97g-6U-bEk" secondAttribute="trailing" constant="-16" id="pdH-Pr-DBX"/>
+                            <constraint firstItem="97g-6U-bEk" firstAttribute="top" secondItem="5BZ-Wa-ol1" secondAttribute="bottom" id="tfT-n9-VXK"/>
+                        </constraints>
+                    </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cY1-9m-ToK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="114" y="896"/>
         </scene>
     </scenes>
 </document>

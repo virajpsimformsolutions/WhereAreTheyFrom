@@ -9,11 +9,12 @@
 /* Begin PBXBuildFile section */
 		28A4B2A51BB20A3B007F35CD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A4B2A41BB20A3B007F35CD /* AppDelegate.swift */; };
 		28A4B2A81BB20A3B007F35CD /* Where_Are_They_From_.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 28A4B2A61BB20A3B007F35CD /* Where_Are_They_From_.xcdatamodeld */; };
-		28A4B2AA1BB20A3B007F35CD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A4B2A91BB20A3B007F35CD /* ViewController.swift */; };
 		28A4B2AD1BB20A3B007F35CD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28A4B2AB1BB20A3B007F35CD /* Main.storyboard */; };
 		28A4B2AF1BB20A3B007F35CD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28A4B2AE1BB20A3B007F35CD /* Images.xcassets */; };
 		28A4B2B21BB20A3B007F35CD /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28A4B2B01BB20A3B007F35CD /* LaunchScreen.xib */; };
 		28A4B2BE1BB20A3B007F35CD /* Where_Are_They_From_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A4B2BD1BB20A3B007F35CD /* Where_Are_They_From_Tests.swift */; };
+		28A4B2CB1BB214B0007F35CD /* ActorMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A4B2CA1BB214B0007F35CD /* ActorMapViewController.swift */; };
+		28A4B2CD1BB2175A007F35CD /* ActorSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A4B2CC1BB2175A007F35CD /* ActorSearchViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,13 +32,14 @@
 		28A4B2A31BB20A3B007F35CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		28A4B2A41BB20A3B007F35CD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		28A4B2A71BB20A3B007F35CD /* Where_Are_They_From_.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Where_Are_They_From_.xcdatamodel; sourceTree = "<group>"; };
-		28A4B2A91BB20A3B007F35CD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		28A4B2AC1BB20A3B007F35CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		28A4B2AE1BB20A3B007F35CD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		28A4B2B11BB20A3B007F35CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		28A4B2B71BB20A3B007F35CD /* Where Are They From?Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Where Are They From?Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28A4B2BC1BB20A3B007F35CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		28A4B2BD1BB20A3B007F35CD /* Where_Are_They_From_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Where_Are_They_From_Tests.swift; sourceTree = "<group>"; };
+		28A4B2CA1BB214B0007F35CD /* ActorMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActorMapViewController.swift; sourceTree = "<group>"; };
+		28A4B2CC1BB2175A007F35CD /* ActorSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActorSearchViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,11 +82,9 @@
 			isa = PBXGroup;
 			children = (
 				28A4B2A41BB20A3B007F35CD /* AppDelegate.swift */,
-				28A4B2A91BB20A3B007F35CD /* ViewController.swift */,
-				28A4B2AB1BB20A3B007F35CD /* Main.storyboard */,
-				28A4B2AE1BB20A3B007F35CD /* Images.xcassets */,
-				28A4B2B01BB20A3B007F35CD /* LaunchScreen.xib */,
-				28A4B2A61BB20A3B007F35CD /* Where_Are_They_From_.xcdatamodeld */,
+				28A4B2C71BB20D4D007F35CD /* Model */,
+				28A4B2C91BB20D61007F35CD /* Controllers */,
+				28A4B2C81BB20D58007F35CD /* Views */,
 				28A4B2A21BB20A3B007F35CD /* Supporting Files */,
 			);
 			path = "Where Are They From?";
@@ -93,6 +93,8 @@
 		28A4B2A21BB20A3B007F35CD /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				28A4B2AE1BB20A3B007F35CD /* Images.xcassets */,
+				28A4B2B01BB20A3B007F35CD /* LaunchScreen.xib */,
 				28A4B2A31BB20A3B007F35CD /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -113,6 +115,31 @@
 				28A4B2BC1BB20A3B007F35CD /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		28A4B2C71BB20D4D007F35CD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				28A4B2A61BB20A3B007F35CD /* Where_Are_They_From_.xcdatamodeld */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		28A4B2C81BB20D58007F35CD /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				28A4B2AB1BB20A3B007F35CD /* Main.storyboard */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		28A4B2C91BB20D61007F35CD /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				28A4B2CA1BB214B0007F35CD /* ActorMapViewController.swift */,
+				28A4B2CC1BB2175A007F35CD /* ActorSearchViewController.swift */,
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -214,7 +241,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				28A4B2AA1BB20A3B007F35CD /* ViewController.swift in Sources */,
+				28A4B2CB1BB214B0007F35CD /* ActorMapViewController.swift in Sources */,
+				28A4B2CD1BB2175A007F35CD /* ActorSearchViewController.swift in Sources */,
 				28A4B2A81BB20A3B007F35CD /* Where_Are_They_From_.xcdatamodeld in Sources */,
 				28A4B2A51BB20A3B007F35CD /* AppDelegate.swift in Sources */,
 			);
