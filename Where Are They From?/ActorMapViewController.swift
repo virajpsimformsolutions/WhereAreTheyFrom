@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ActorMapViewController: UIViewController {
+class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +22,11 @@ class ActorMapViewController: UIViewController {
         let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ActorSearchViewController") as! ActorSearchViewController
         
         self.presentViewController(controller, animated: true, completion: nil)
+    }
+    
+    func actorPicker(actorPicker: ActorSearchViewController, didPickActor actor: Actor?) {
+        println("Picked:")
+        println(actor)
     }
 
 
