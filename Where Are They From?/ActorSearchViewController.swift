@@ -19,7 +19,6 @@ class ActorSearchViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet weak var searchBar : UISearchBar!
     
     var actors = [Actor]()
-    
     var delegate: ActorSearchViewControllerDelegate?
     
     var searchTask: NSURLSessionDataTask?
@@ -65,7 +64,6 @@ class ActorSearchViewController: UIViewController, UITableViewDelegate, UITableV
         searchTask = TheMovieDB.sharedInstance().taskForResource(resource, parameters: parameters) { [unowned self] jsonResult, error in
             
             if let error = error {
-                println("Error searching for actors: \(error.localizedDescription)")
                 return
             }
             

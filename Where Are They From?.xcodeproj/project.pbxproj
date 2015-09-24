@@ -22,6 +22,7 @@
 		28A4B2DC1BB35D2D007F35CD /* TheMovieDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A4B2D71BB35D2D007F35CD /* TheMovieDB.swift */; };
 		28A4B2DE1BB36061007F35CD /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A4B2DD1BB36061007F35CD /* Config.swift */; };
 		28A4B2E01BB392E0007F35CD /* TheMovieDB - Info in Resources */ = {isa = PBXBuildFile; fileRef = 28A4B2DF1BB392E0007F35CD /* TheMovieDB - Info */; };
+		28A4B2E21BB49FA6007F35CD /* ActorDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A4B2E11BB49FA6007F35CD /* ActorDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		28A4B2D71BB35D2D007F35CD /* TheMovieDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TheMovieDB.swift; sourceTree = "<group>"; };
 		28A4B2DD1BB36061007F35CD /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		28A4B2DF1BB392E0007F35CD /* TheMovieDB - Info */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "TheMovieDB - Info"; sourceTree = "<group>"; };
+		28A4B2E11BB49FA6007F35CD /* ActorDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActorDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +157,7 @@
 			children = (
 				28A4B2CA1BB214B0007F35CD /* ActorMapViewController.swift */,
 				28A4B2CC1BB2175A007F35CD /* ActorSearchViewController.swift */,
+				28A4B2E11BB49FA6007F35CD /* ActorDetailViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -273,6 +276,7 @@
 			files = (
 				28A4B2DC1BB35D2D007F35CD /* TheMovieDB.swift in Sources */,
 				28A4B2CB1BB214B0007F35CD /* ActorMapViewController.swift in Sources */,
+				28A4B2E21BB49FA6007F35CD /* ActorDetailViewController.swift in Sources */,
 				28A4B2CD1BB2175A007F35CD /* ActorSearchViewController.swift in Sources */,
 				28A4B2DB1BB35D2D007F35CD /* TheMovieDB-Constants.swift in Sources */,
 				28A4B2A81BB20A3B007F35CD /* Where_Are_They_From_.xcdatamodeld in Sources */,

@@ -5,10 +5,12 @@
         <attribute name="birthplace" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="website" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Actor" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="Actor" positionX="-63" positionY="-18" width="128" height="165"/>
     </elements>
 </model>

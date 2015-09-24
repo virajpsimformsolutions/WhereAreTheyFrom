@@ -56,11 +56,30 @@
                         <outlet property="activityIndicator" destination="ew6-fa-dPp" id="N3g-LS-aPB"/>
                         <outlet property="mapView" destination="y7r-M7-0Tf" id="Cah-Wa-Jwe"/>
                         <segue destination="PVM-HC-E44" kind="presentation" identifier="ActorSearchViewController" id="UQp-lo-FiE"/>
+                        <segue destination="1Oa-J4-n2L" kind="showDetail" identifier="ActorDetailViewController" id="eOB-UC-hgx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CdT-um-asY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="114" y="158"/>
+            <point key="canvasLocation" x="160" y="158"/>
+        </scene>
+        <!--Actor Detail View Controller-->
+        <scene sceneID="Gqv-ym-6cz">
+            <objects>
+                <viewController id="1Oa-J4-n2L" customClass="ActorDetailViewController" customModule="Where_Are_They_From_" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="llk-4C-8d4"/>
+                        <viewControllerLayoutGuide type="bottom" id="Vxr-t5-bkK"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="d6d-HN-lW7">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="i95-J2-cxM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="811" y="158"/>
         </scene>
         <!--Actor Search View Controller-->
         <scene sceneID="87k-cM-6nw">
@@ -137,7 +156,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cY1-9m-ToK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="114" y="896"/>
+            <point key="canvasLocation" x="160" y="896"/>
         </scene>
     </scenes>
 </document>

@@ -15,24 +15,25 @@ import SystemConfiguration
 class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegate, MKMapViewDelegate {
     
     var task: NSURLSessionDataTask?
-    var actors = [Actor?]()
+    var actors = [Actor]()
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         activityIndicator.stopAnimating()
-     //   activityIndicator.hidden = true
         
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "searchActors")
         
         actors = fetchAllActors()
+        appendActors()
     }
     
+    /*------- Persistent Pin Controll -------*/
     func fetchAllActors() -> [Actor] {
         
         let error: NSErrorPointer = nil
@@ -44,6 +45,19 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         }
         
         return results as! [Actor]
+    }
+    
+    /*------- 2 -------*/
+    func appendActors() {
+        
+        for actor in actors {
+            let coordinates = CLLocationCoordinate2DMake(actor.latitude as! Double, actor.longitude as! Double)
+            var annotation = MKPointAnnotation()
+            annotation.coordinate = coordinates
+            annotation.title = actor.name
+            annotation.subtitle = actor.birthplace
+            mapView.addAnnotation(annotation)
+        }
     }
     
     var sharedContext: NSManagedObjectContext {
@@ -65,22 +79,62 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         let resource = TheMovieDB.Resources.Person
         let parameters = ["id" : id!]
         
+        // Search for actor by ID number to obtain data
         task = TheMovieDB.sharedInstance().taskForResource(resource, parameters: parameters) { [unowned self] jsonResult, error in
             
+            var coordinate = CLLocationCoordinate2D()
+            
             if let error = error {
-                println("Error searching for actors: \(error.localizedDescription)")
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.alert("Error locating actor in database:\n \(error.localizedDescription)")
+                }
                 return
             } else {
-                
-                let dictionary: [String : AnyObject?] = [
-                    Actor.Keys.Bio : jsonResult["biography"],
-                    Actor.Keys.BirthPlace : jsonResult["place_of_birth"],
-                    Actor.Keys.ID : jsonResult["id"],
-                    Actor.Keys.ImageURL : jsonResult["profile_path"],
-                    Actor.Keys.Name : jsonResult["name"],
-                    Actor.Keys.Website : jsonResult["homepage"]]
-                
-                self.postAndPersistActor(dictionary)
+                if self.isConnectedToNetwork() {
+                    
+                    let geoLocation = CLGeocoder()
+                    
+                    geoLocation.geocodeAddressString(jsonResult["place_of_birth"] as! String) { placeMark, error in
+                        if error != nil {
+                            dispatch_async(dispatch_get_main_queue()) {
+                                self.activityIndicator.stopAnimating()
+                                self.alert("Trouble locating hometown :s")
+                            }
+                            return
+                        } else {
+                            let location = placeMark[0] as! CLPlacemark
+                            coordinate = location.location.coordinate
+                            
+                            // In case the actor has the same hometown as a previosuly picked actor - add small offset
+                            for location in self.actors {
+                                if (location.latitude == coordinate.latitude as Double) && (location.longitude == coordinate.longitude as Double) {
+                                    coordinate.longitude = coordinate.longitude + 0.015
+                                }
+                            }
+                            
+                            dispatch_async(dispatch_get_main_queue()) {
+                                
+                                let dictionary: [String : AnyObject?] = [
+                                    Actor.Keys.Bio : jsonResult["biography"],
+                                    Actor.Keys.BirthPlace : jsonResult["place_of_birth"],
+                                    Actor.Keys.ID : jsonResult["id"],
+                                    Actor.Keys.ImageURL : jsonResult["profile_path"],
+                                    Actor.Keys.Name : jsonResult["name"],
+                                    Actor.Keys.Website : jsonResult["homepage"],
+                                    Actor.Keys.Latitude : coordinate.latitude,
+                                    Actor.Keys.Longitude : coordinate.longitude
+                                ]
+                                
+                                self.postAndPersistActor(dictionary)
+                            }
+                        }
+                    }
+                    
+                } else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.alert("Not connected to the network!")
+                    }
+                }
                 
             }
         }
@@ -88,36 +142,26 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
     }
     
     func postAndPersistActor(dictionary: [String : AnyObject?]) {
-        let geoLocation = CLGeocoder()
-        var coordinate = CLLocationCoordinate2D()
         
-        if isConnectedToNetwork(){
-            geoLocation.geocodeAddressString(dictionary["place_of_birth"] as! String) { placeMark, error in
-                if error != nil {
-                    self.activityIndicator.stopAnimating()
-                    self.alert("Trouble locating hometown.")
-                    return
-                } else {
-                    let location = placeMark[0] as! CLPlacemark
-                    coordinate = location.location.coordinate
-                    self.goToRegion(coordinate)
-                }
-            }} else { alert("Not connected to network!") }
-    }
-    
-    func goToRegion(center: CLLocationCoordinate2D) {
-
+        let newActor = Actor(dictionary: dictionary, context: sharedContext)
+        self.actors.append(newActor)
+        CoreDataStackManager.sharedInstance().saveContext()
+        
+        let coordinates = CLLocationCoordinate2DMake(newActor.latitude as! Double, newActor.longitude as! Double)
+        
         let span = MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10)
-        let region = MKCoordinateRegion(center: center, span: span)
+        let region = MKCoordinateRegion(center: coordinates, span: span)
         mapView.setRegion(region, animated: true)
         
-        let skeletonPin = MKPointAnnotation()
-        skeletonPin.coordinate = center
+        var annotation = MKPointAnnotation()
+        annotation.coordinate = coordinates
+        annotation.title = newActor.name
+        annotation.subtitle = newActor.birthplace
         
-        mapView.addAnnotation(skeletonPin)
+        mapView.addAnnotation(annotation)
         activityIndicator.stopAnimating()
-        
     }
+    
     
     /*------- MKMapViewDelegate Functionality -------*/
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
@@ -140,22 +184,22 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
     
     /*------- 2 -------*/
     func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView) {
-//        let controller = storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
-//        
-//        let lat = view.annotation.coordinate.latitude as Double
-//        let long = view.annotation.coordinate.longitude as Double
-//        
-//        for pin in pins {
-//            if pin.latitude == lat && pin.longitude == long {
-//                controller.pin  = pin
-//                self.navigationController!.pushViewController(controller, animated: true)
-//            }
-//        }
+        //        let controller = storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
+        //
+        //        let lat = view.annotation.coordinate.latitude as Double
+        //        let long = view.annotation.coordinate.longitude as Double
+        //
+        //        for pin in pins {
+        //            if pin.latitude == lat && pin.longitude == long {
+        //                controller.pin  = pin
+        //                self.navigationController!.pushViewController(controller, animated: true)
+        //            }
+        //        }
     }
     
     /*------- 3 -------*/
     func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
-//        saveMapRegion()
+        //        saveMapRegion()
     }
     
     func alert(message: String) {
@@ -185,6 +229,6 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         
         return isReachable && !needsConnection
     }
-
+    
     
 }
