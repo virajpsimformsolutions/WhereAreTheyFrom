@@ -21,7 +21,7 @@
             </objects>
             <point key="canvasLocation" x="-535" y="158"/>
         </scene>
-        <!--Actor Map View Controller-->
+        <!--Where Are They From?-->
         <scene sceneID="bzp-ad-Mn5">
             <objects>
                 <viewController storyboardIdentifier="ActorMapViewController" id="VK0-iM-Q1N" customClass="ActorMapViewController" customModule="Where_Are_They_From_" customModuleProvider="target" sceneMemberID="viewController">
@@ -32,10 +32,29 @@
                     <view key="view" contentMode="scaleToFill" id="mEv-Gf-KEC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="y7r-M7-0Tf">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                            </mapView>
+                            <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="ew6-fa-dPp">
+                                <rect key="frame" x="282" y="313" width="37" height="37"/>
+                                <color key="color" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="ew6-fa-dPp" secondAttribute="centerX" constant="-0.5" id="6Wd-XL-oJH"/>
+                            <constraint firstAttribute="centerY" secondItem="ew6-fa-dPp" secondAttribute="centerY" constant="-31.5" id="RCd-vD-aYf"/>
+                            <constraint firstItem="y7r-M7-0Tf" firstAttribute="leading" secondItem="mEv-Gf-KEC" secondAttribute="leadingMargin" constant="-16" id="SPC-Os-tgR"/>
+                            <constraint firstItem="y7r-M7-0Tf" firstAttribute="top" secondItem="Ak1-5B-jGI" secondAttribute="bottom" id="VJC-PG-tvn"/>
+                            <constraint firstItem="5Ep-3R-rfC" firstAttribute="top" secondItem="y7r-M7-0Tf" secondAttribute="bottom" id="YOh-OK-0fL"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="y7r-M7-0Tf" secondAttribute="trailing" constant="-16" id="rM1-Nh-qs2"/>
+                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="oEO-Pd-V76"/>
+                    <navigationItem key="navigationItem" title="Where Are They From?" id="oEO-Pd-V76"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="ew6-fa-dPp" id="N3g-LS-aPB"/>
+                        <outlet property="mapView" destination="y7r-M7-0Tf" id="Cah-Wa-Jwe"/>
                         <segue destination="PVM-HC-E44" kind="presentation" identifier="ActorSearchViewController" id="UQp-lo-FiE"/>
                     </connections>
                 </viewController>
