@@ -17,14 +17,18 @@ class Actor : NSManagedObject {
     struct Keys {
         static let Name = "name"
         static let ImageURL = "profile_path"
-        static let Bio = "bio"
+        static let Bio = "biography"
         static let ID = "id"
+        static let BirthPlace = "place_of_birth"
+        static let Website = "homepage"
     }
     
     @NSManaged var name: String
     @NSManaged var id: NSNumber
     @NSManaged var imageURL: String?
     @NSManaged var bio: String?
+    @NSManaged var website: String?
+    @NSManaged var birthplace: String?
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
@@ -40,6 +44,18 @@ class Actor : NSManagedObject {
         id = dictionary[Keys.ID] as! Int
         imageURL = dictionary[Keys.ImageURL] as? String
         bio = dictionary[Keys.Bio] as? String
+        website = dictionary[Keys.Website] as? String
+        birthplace = dictionary[Keys.BirthPlace] as? String
+    }
+    
+    var image: UIImage? {
+        get {
+            return TheMovieDB.Caches.imageCache.imageWithIdentifier(imageURL)
+        }
+        
+        set {
+            TheMovieDB.Caches.imageCache.storeImage(image, withIdentifier: imageURL!)
+        }
     }
     
 }

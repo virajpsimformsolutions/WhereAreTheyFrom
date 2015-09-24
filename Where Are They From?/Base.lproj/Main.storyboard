@@ -24,7 +24,7 @@
         <!--Actor Map View Controller-->
         <scene sceneID="bzp-ad-Mn5">
             <objects>
-                <viewController id="VK0-iM-Q1N" customClass="ActorMapViewController" customModule="Where_Are_They_From_" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ActorMapViewController" id="VK0-iM-Q1N" customClass="ActorMapViewController" customModule="Where_Are_They_From_" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ak1-5B-jGI"/>
                         <viewControllerLayoutGuide type="bottom" id="5Ep-3R-rfC"/>
