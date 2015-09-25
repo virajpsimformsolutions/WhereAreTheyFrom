@@ -1,0 +1,12 @@
+Where Are They From? is an app that lets you search for an actor and
+find out where in the world they are from!
+
+Start by tapping the "plus" icon on the upper right hand corner of the
+map scene. Use the search bar to seach TheMovieDB for your fav actors.
+Click the name of the actor you wish to find out about from the list.
+If succesful, the app will locate the hometown of the actor and place 
+a pin at that location! By clicking the pin and the information button
+on the annotation view that pops up you can get a short description of 
+the actor from wikipedia. To delete pins, use the edit button on the 
+top left of the map screen. In the edid mode simply tap on pins to
+delete them.

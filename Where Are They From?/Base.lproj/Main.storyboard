@@ -21,7 +21,7 @@
             </objects>
             <point key="canvasLocation" x="-535" y="158"/>
         </scene>
-        <!--Where Are They From?-->
+        <!--Actor Map View Controller-->
         <scene sceneID="bzp-ad-Mn5">
             <objects>
                 <viewController storyboardIdentifier="ActorMapViewController" id="VK0-iM-Q1N" customClass="ActorMapViewController" customModule="Where_Are_They_From_" customModuleProvider="target" sceneMemberID="viewController">
@@ -35,6 +35,9 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="y7r-M7-0Tf">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <connections>
+                                    <outlet property="delegate" destination="VK0-iM-Q1N" id="MAB-Xk-pEz"/>
+                                </connections>
                             </mapView>
                             <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="ew6-fa-dPp">
                                 <rect key="frame" x="282" y="313" width="37" height="37"/>
@@ -51,7 +54,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="y7r-M7-0Tf" secondAttribute="trailing" constant="-16" id="rM1-Nh-qs2"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Where Are They From?" id="oEO-Pd-V76"/>
+                    <navigationItem key="navigationItem" id="oEO-Pd-V76"/>
                     <connections>
                         <outlet property="activityIndicator" destination="ew6-fa-dPp" id="N3g-LS-aPB"/>
                         <outlet property="mapView" destination="y7r-M7-0Tf" id="Cah-Wa-Jwe"/>
@@ -66,7 +69,7 @@
         <!--Actor Detail View Controller-->
         <scene sceneID="Gqv-ym-6cz">
             <objects>
-                <viewController id="1Oa-J4-n2L" customClass="ActorDetailViewController" customModule="Where_Are_They_From_" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ActorDetailViewController" id="1Oa-J4-n2L" customClass="ActorDetailViewController" customModule="Where_Are_They_From_" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="llk-4C-8d4"/>
                         <viewControllerLayoutGuide type="bottom" id="Vxr-t5-bkK"/>
@@ -74,8 +77,28 @@
                     <view key="view" contentMode="scaleToFill" id="d6d-HN-lW7">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.001" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zq5-Nv-4hn">
+                                <rect key="frame" x="16" y="88" width="568" height="452"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Zq5-Nv-4hn" firstAttribute="top" secondItem="llk-4C-8d4" secondAttribute="bottom" constant="24" id="HVy-Uu-ulU"/>
+                            <constraint firstAttribute="centerY" secondItem="Zq5-Nv-4hn" secondAttribute="centerY" constant="-14" id="Jy5-Y5-ToD"/>
+                            <constraint firstItem="Zq5-Nv-4hn" firstAttribute="leading" secondItem="d6d-HN-lW7" secondAttribute="leadingMargin" id="RHv-U2-qux"/>
+                            <constraint firstAttribute="centerX" secondItem="Zq5-Nv-4hn" secondAttribute="centerX" id="hjP-KS-uUp"/>
+                        </constraints>
                     </view>
+                    <toolbarItems/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="bio" destination="Zq5-Nv-4hn" id="xmF-lw-GOw"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="i95-J2-cxM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

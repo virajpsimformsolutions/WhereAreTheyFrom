@@ -16,10 +16,12 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
     
     var task: NSURLSessionDataTask?
     var actors = [Actor]()
+    var sharedContext: NSManagedObjectContext {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,12 +30,13 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "searchActors")
+        self.navigationItem.title = "Where Are They From?"
         
         actors = fetchAllActors()
         appendActors()
     }
     
-    /*------- Persistent Pin Controll -------*/
+    /*------- Main Functionality -------*/
     func fetchAllActors() -> [Actor] {
         
         let error: NSErrorPointer = nil
@@ -47,7 +50,6 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         return results as! [Actor]
     }
     
-    /*------- 2 -------*/
     func appendActors() {
         
         for actor in actors {
@@ -59,11 +61,7 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
             mapView.addAnnotation(annotation)
         }
     }
-    
-    var sharedContext: NSManagedObjectContext {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
-    }
-    
+
     func searchActors() {
         let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ActorSearchViewController") as! ActorSearchViewController
         
@@ -72,6 +70,28 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         self.presentViewController(controller, animated: true, completion: nil)
     }
     
+    func postAndPersistActor(dictionary: [String : AnyObject?]) {
+        
+        let newActor = Actor(dictionary: dictionary, context: sharedContext)
+        self.actors.append(newActor)
+        CoreDataStackManager.sharedInstance().saveContext()
+        
+        let coordinates = CLLocationCoordinate2DMake(newActor.latitude as! Double, newActor.longitude as! Double)
+        
+        let span = MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10)
+        let region = MKCoordinateRegion(center: coordinates, span: span)
+        mapView.setRegion(region, animated: true)
+        
+        var annotation = MKPointAnnotation()
+        annotation.coordinate = coordinates
+        annotation.title = newActor.name
+        annotation.subtitle = newActor.birthplace
+        
+        mapView.addAnnotation(annotation)
+        activityIndicator.stopAnimating()
+    }
+    
+    /*------- ActorSearchViewControllerDelegate Function -------*/
     func actorID(actorPicker: ActorSearchViewController, didPickActor id: NSNumber?) {
         
         activityIndicator.startAnimating()
@@ -94,7 +114,13 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
                     
                     let geoLocation = CLGeocoder()
                     
-                    geoLocation.geocodeAddressString(jsonResult["place_of_birth"] as! String) { placeMark, error in
+                    if var birthplace = jsonResult["place_of_birth"] as? String {
+                        
+                        if birthplace.rangeOfString(" - ") != nil {
+                            birthplace = birthplace.stringByReplacingOccurrencesOfString(" - ", withString: ", ")
+                        }
+                        
+                    geoLocation.geocodeAddressString(birthplace) { placeMark, error in
                         if error != nil {
                             dispatch_async(dispatch_get_main_queue()) {
                                 self.activityIndicator.stopAnimating()
@@ -129,7 +155,12 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
                             }
                         }
                     }
-                    
+                    } else {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.alert("Trouble locating hometown :s")
+                        }
+                    }
+                
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
                         self.alert("Not connected to the network!")
@@ -141,28 +172,6 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         
     }
     
-    func postAndPersistActor(dictionary: [String : AnyObject?]) {
-        
-        let newActor = Actor(dictionary: dictionary, context: sharedContext)
-        self.actors.append(newActor)
-        CoreDataStackManager.sharedInstance().saveContext()
-        
-        let coordinates = CLLocationCoordinate2DMake(newActor.latitude as! Double, newActor.longitude as! Double)
-        
-        let span = MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10)
-        let region = MKCoordinateRegion(center: coordinates, span: span)
-        mapView.setRegion(region, animated: true)
-        
-        var annotation = MKPointAnnotation()
-        annotation.coordinate = coordinates
-        annotation.title = newActor.name
-        annotation.subtitle = newActor.birthplace
-        
-        mapView.addAnnotation(annotation)
-        activityIndicator.stopAnimating()
-    }
-    
-    
     /*------- MKMapViewDelegate Functionality -------*/
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
         
@@ -172,8 +181,10 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pinView!.pinColor = .Green
             pinView!.pinColor = .Red
-            pinView!.animatesDrop = true
+            pinView!.canShowCallout = true
+            pinView!.rightCalloutAccessoryView = UIButton.buttonWithType(.DetailDisclosure) as! UIButton
         }
         else {
             pinView!.annotation = annotation
@@ -182,33 +193,60 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         return pinView
     }
     
-    /*------- 2 -------*/
-    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView) {
-        //        let controller = storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
-        //
-        //        let lat = view.annotation.coordinate.latitude as Double
-        //        let long = view.annotation.coordinate.longitude as Double
-        //
-        //        for pin in pins {
-        //            if pin.latitude == lat && pin.longitude == long {
-        //                controller.pin  = pin
-        //                self.navigationController!.pushViewController(controller, animated: true)
-        //            }
-        //        }
+    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
+        if (self.editing) {
+            
+            let lat = view.annotation.coordinate.latitude as Double
+            let long = view.annotation.coordinate.longitude as Double
+            
+            var actorToDelete: Actor?
+            var index = 0
+            var count = 0
+            
+            for actor in actors {
+                if actor.latitude == lat && actor.longitude == long {
+                    actorToDelete = actor
+                    index = count
+                    println(actor)
+                }
+                count++
+            }
+            
+            actors.removeAtIndex(index)
+            sharedContext.deleteObject(actorToDelete!)
+            CoreDataStackManager.sharedInstance().saveContext()
+            
+            self.mapView.removeAnnotation(view.annotation)
+        }
     }
     
-    /*------- 3 -------*/
-    func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
-        //        saveMapRegion()
+    func mapView(mapView: MKMapView!, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        
+        if control == annotationView.rightCalloutAccessoryView {
+            
+            let controller = storyboard!.instantiateViewControllerWithIdentifier("ActorDetailViewController") as! ActorDetailViewController
+            
+            let lat = annotationView.annotation.coordinate.latitude as Double
+            let long = annotationView.annotation.coordinate.longitude as Double
+            
+            for actor in actors {
+                if actor.latitude == lat && actor.longitude == long {
+                    controller.actor = actor
+                    self.navigationController!.pushViewController(controller, animated: true)
+                }
+            }
+        }
     }
     
+    /*------- Error Handeling and Helper Functions -------*/
     func alert(message: String) {
         let alertController = UIAlertController(title: "There was an error in handling your request:", message: message, preferredStyle: .Alert)
         let cancelAction = UIAlertAction(title: "OK", style: .Cancel) { (action) in }
         alertController.addAction(cancelAction)
+        self.activityIndicator.stopAnimating()
         presentViewController(alertController, animated: true){}
     }
-    
+
     func isConnectedToNetwork() -> Bool {
         
         var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
@@ -230,5 +268,13 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         return isReachable && !needsConnection
     }
     
-    
+    override func setEditing(editing: Bool, animated: Bool) {
+        super.setEditing(!self.editing, animated: true)
+        if (self.editing){
+            let alertController = UIAlertController(title: "Tap on a pin to delete it", message: "", preferredStyle: .Alert)
+            let cancelAction = UIAlertAction(title: "OK", style: .Cancel) { (action) in }
+            alertController.addAction(cancelAction)
+            presentViewController(alertController, animated: true){}
+        }
+    }
 }

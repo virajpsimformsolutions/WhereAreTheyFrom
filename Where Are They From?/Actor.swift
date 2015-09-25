@@ -53,16 +53,5 @@ class Actor : NSManagedObject {
         latitude = dictionary[Keys.Latitude] as? Double
         longitude = dictionary[Keys.Longitude] as? Double
     }
-    
-    var image: UIImage? {
-        get {
-            return TheMovieDB.Caches.imageCache.imageWithIdentifier(imageURL)
-        }
-        
-        set {
-            TheMovieDB.Caches.imageCache.storeImage(image, withIdentifier: imageURL!)
-        }
-    }
-    
 }
 

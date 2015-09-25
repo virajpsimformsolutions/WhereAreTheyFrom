@@ -41,10 +41,10 @@ class ActorSearchViewController: UIViewController, UITableViewDelegate, UITableV
     }
 
     @IBAction func cancel() {
-        self.delegate?.actorID(self, didPickActor: nil)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    /*------- UISearchBarDelegate Functionality -------*/
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         
         if let task = searchTask {
@@ -85,6 +85,7 @@ class ActorSearchViewController: UIViewController, UITableViewDelegate, UITableV
         searchBar.resignFirstResponder()
     }
     
+    /*------- UITableViewDelegate Functionality -------*/
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let CellReuseId = "ActorSearchCell"
         let actor = actors[indexPath.row]
