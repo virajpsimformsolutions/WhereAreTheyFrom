@@ -482,6 +482,7 @@
 				28A4B2C31BB20A3B007F35CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		28A4B2C41BB20A3B007F35CD /* Build configuration list for PBXNativeTarget "Where Are They From?Tests" */ = {
 			isa = XCConfigurationList;
@@ -490,6 +491,7 @@
 				28A4B2C61BB20A3B007F35CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

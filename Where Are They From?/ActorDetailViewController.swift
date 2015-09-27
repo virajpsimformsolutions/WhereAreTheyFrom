@@ -12,6 +12,7 @@ class ActorDetailViewController: UIViewController {
     
     var actor: Actor?
     
+    @IBOutlet weak var stepper: UIStepper!
     @IBOutlet weak var bio: UILabel!
 
     override func viewDidLoad() {
@@ -24,5 +25,9 @@ class ActorDetailViewController: UIViewController {
         
         self.navigationItem.title = actor!.name
     }
-
+    
+    @IBAction func step(sender: UIStepper) {
+        let size = CGFloat(stepper.value)
+        bio.font = bio.font.fontWithSize(size)
+    }
 }

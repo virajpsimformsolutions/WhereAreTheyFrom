@@ -20,13 +20,15 @@ class ActorSearchViewController: UIViewController, UITableViewDelegate, UITableV
     
     var actors = [Actor]()
     var delegate: ActorSearchViewControllerDelegate?
-    
     var searchTask: NSURLSessionDataTask?
-
     var temporaryContext: NSManagedObjectContext!
 
+    /*------- Initial Setup -------*/
     override func viewDidLoad() {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "cancel")
+        
+        searchBar.enablesReturnKeyAutomatically = false
+        searchBar.returnKeyType = .Done
         
         let sharedContext = CoreDataStackManager.sharedInstance().managedObjectContext!
 
@@ -39,10 +41,7 @@ class ActorSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
         self.searchBar.becomeFirstResponder()
     }
-
-    @IBAction func cancel() {
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
+    
     
     /*------- UISearchBarDelegate Functionality -------*/
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
@@ -69,9 +68,11 @@ class ActorSearchViewController: UIViewController, UITableViewDelegate, UITableV
             
             if let actorDictionaries = jsonResult.valueForKey("results") as? [[String : AnyObject]] {
                 self.searchTask = nil
-
-                self.actors = actorDictionaries.map() {
-                    Actor(dictionary: $0, context: self.temporaryContext)
+                
+                self.temporaryContext.performBlock(){
+                    self.actors = actorDictionaries.map() {
+                        Actor(dictionary: $0, context: self.temporaryContext)
+                    }
                 }
                 
                 dispatch_async(dispatch_get_main_queue()) {
@@ -80,10 +81,11 @@ class ActorSearchViewController: UIViewController, UITableViewDelegate, UITableV
             }
         }
     }
-    
+
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
+    
     
     /*------- UITableViewDelegate Functionality -------*/
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -108,6 +110,18 @@ class ActorSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
         self.dismissViewControllerAnimated(true, completion: nil)
     }
+    
+    
+    /*------- Helper Functions -------*/
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
+    
+    @IBAction func cancel() {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
 }
 
 
