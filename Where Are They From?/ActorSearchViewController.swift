@@ -42,7 +42,6 @@ class ActorSearchViewController: UIViewController, UITableViewDelegate, UITableV
         self.searchBar.becomeFirstResponder()
     }
     
-    
     /*------- UISearchBarDelegate Functionality -------*/
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         
@@ -86,7 +85,6 @@ class ActorSearchViewController: UIViewController, UITableViewDelegate, UITableV
         searchBar.resignFirstResponder()
     }
     
-    
     /*------- UITableViewDelegate Functionality -------*/
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let CellReuseId = "ActorSearchCell"
@@ -110,7 +108,6 @@ class ActorSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
         self.dismissViewControllerAnimated(true, completion: nil)
     }
-    
     
     /*------- Helper Functions -------*/
     func textFieldShouldReturn(textField: UITextField) -> Bool {

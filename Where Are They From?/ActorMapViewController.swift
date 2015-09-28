@@ -28,7 +28,6 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         return CoreDataStackManager.sharedInstance().managedObjectContext!
     }
     
-    
     /*------- Setup -------*/
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +42,6 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         appendActors()
         restoreMapRegion(false)
     }
-    
     
     /*------- Main Functionality -------*/
     func postAndPersistActor(dictionary: [String : AnyObject?]) {
@@ -66,7 +64,6 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         mapView.addAnnotation(annotation)
         activityIndicator.stopAnimating()
     }
-    
     
     /*------- ActorSearchViewControllerDelegate Function -------*/
     func actorID(actorPicker: ActorSearchViewController, didPickActor id: NSNumber?) {
@@ -149,7 +146,6 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         
     }
     
-    
     /*------- MKMapViewDelegate Functionality -------*/
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
         
@@ -219,7 +215,6 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         saveMapRegion()
     }
     
-    
     /*------- Error Handeling -------*/
     func alert(message: String) {
         let alertController = UIAlertController(title: "There was an error in handling your request:", message: message, preferredStyle: .Alert)
@@ -249,7 +244,6 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         
         return isReachable && !needsConnection
     }
-    
     
     /*------- NSKeyedArchiver Persistent Map Region Functionality -------*/
     func restoreMapRegion(animated: Bool) {
@@ -281,7 +275,6 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         
         NSKeyedArchiver.archiveRootObject(dictionary, toFile: filePath)
     }
-    
     
     /*------- Helper Functions -------*/
     func fetchAllActors() -> [Actor] {
