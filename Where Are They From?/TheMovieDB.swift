@@ -46,10 +46,10 @@ class TheMovieDB : NSObject {
         let task = session.dataTaskWithRequest(request) {data, response, downloadError in
             
             if let error = downloadError {
-                let newError = TheMovieDB.errorForData(data, response: response, error: error)
+                _ = TheMovieDB.errorForData(data, response: response, error: error)
                 completionHandler(result: nil, error: downloadError)
             } else {
-                TheMovieDB.parseJSONWithCompletionHandler(data, completionHandler: completionHandler)
+                TheMovieDB.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
             }
         }
         
@@ -62,7 +62,7 @@ class TheMovieDB : NSObject {
     
     func taskForImageWithSize(size: String, filePath: String, completionHandler: (imageData: NSData?, error: NSError?) ->  Void) -> NSURLSessionTask {
         
-        let urlComponents = [size, filePath]
+        _ = [size, filePath]
         let baseURL = NSURL(string: config.baseImageURLString)!
         let url = baseURL.URLByAppendingPathComponent(size).URLByAppendingPathComponent(filePath)
         
@@ -70,8 +70,8 @@ class TheMovieDB : NSObject {
         
         let task = session.dataTaskWithRequest(request) {data, response, downloadError in
             
-            if let error = downloadError {
-                let newError = TheMovieDB.errorForData(data, response: response, error: downloadError)
+            if let _ = downloadError {
+                let newError = TheMovieDB.errorForData(data, response: response, error: downloadError!)
                 completionHandler(imageData: nil, error: newError)
             } else {
                 completionHandler(imageData: data, error: nil)
@@ -87,7 +87,7 @@ class TheMovieDB : NSObject {
     
     func taskForUpdatingConfig(completionHandler: (didSucceed: Bool, error: NSError?) -> Void) -> NSURLSessionTask {
         
-        var parameters = [String: AnyObject]()
+        let parameters = [String: AnyObject]()
         
         let task = taskForResource(Resources.Config, parameters: parameters) { JSONResult, error in
             
@@ -114,7 +114,7 @@ class TheMovieDB : NSObject {
     
     class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
         
-        if let parsedResult = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments, error: nil) as? [String : AnyObject] {
+        if let parsedResult = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)) as? [String : AnyObject] {
             if let errorMessage = parsedResult[TheMovieDB.Keys.ErrorStatusMessage] as? String {
                 
                 let userInfo = [NSLocalizedDescriptionKey : errorMessage]
@@ -131,7 +131,13 @@ class TheMovieDB : NSObject {
     class func parseJSONWithCompletionHandler(data: NSData, completionHandler: CompletionHander) {
         var parsingError: NSError? = nil
         
-        let parsedResult: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError)
+        let parsedResult: AnyObject?
+        do {
+            parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
+        } catch let error as NSError {
+            parsingError = error
+            parsedResult = nil
+        }
         
         if let error = parsingError {
             completionHandler(result: nil, error: error)
@@ -159,7 +165,7 @@ class TheMovieDB : NSObject {
             urlVars += [key + "=" + "\(escapedValue!)"]
         }
         
-        return (!urlVars.isEmpty ? "?" : "") + join("&", urlVars)
+        return (!urlVars.isEmpty ? "?" : "") + urlVars.joinWithSeparator("&")
     }
     
     
@@ -182,7 +188,7 @@ class TheMovieDB : NSObject {
             static let dateFormatter = Singleton.generateDateFormatter()
             
             static func generateDateFormatter() -> NSDateFormatter {
-                var formatter = NSDateFormatter()
+                let formatter = NSDateFormatter()
                 formatter.dateFormat = "yyyy-mm-dd"
                 
                 return formatter

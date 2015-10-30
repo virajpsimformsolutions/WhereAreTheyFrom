@@ -17,7 +17,7 @@ import Foundation
 */
 
 // MARK: - Files Support
-private let _documentsDirectoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
+private let _documentsDirectoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! as NSURL
 private let _fileURL: NSURL = _documentsDirectoryURL.URLByAppendingPathComponent("TheMovieDB-Context")
 
 
@@ -88,7 +88,7 @@ class Config: NSObject, NSCoding {
         TheMovieDB.sharedInstance().taskForUpdatingConfig() { didSucceed, error in
             
             if let error = error {
-                println("Error updating config: \(error.localizedDescription)")
+                print("Error updating config: \(error.localizedDescription)")
             } else {
                 TheMovieDB.sharedInstance().config.save()
             }
@@ -103,7 +103,7 @@ class Config: NSObject, NSCoding {
     let ProfileSizesKey = "config.profile_size_key"
     let DateUpdatedKey = "config.date_update_key"
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         baseImageURLString = aDecoder.decodeObjectForKey(BaseImageURLStringKey) as! String
         secureBaseImageURLString = aDecoder.decodeObjectForKey(SecureBaseImageURLStringKey) as! String
         posterSizes = aDecoder.decodeObjectForKey(PosterSizesKey) as! [String]

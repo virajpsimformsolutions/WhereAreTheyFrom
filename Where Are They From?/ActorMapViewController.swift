@@ -21,7 +21,7 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
     var actors = [Actor]()
     var filePath : String {
         let manager = NSFileManager.defaultManager()
-        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
+        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! as NSURL
         return url.URLByAppendingPathComponent("mapRegionArchive").path!
     }
     var sharedContext: NSManagedObjectContext {
@@ -56,7 +56,7 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         let region = MKCoordinateRegion(center: coordinates, span: span)
         mapView.setRegion(region, animated: true)
         
-        var annotation = MKPointAnnotation()
+        let annotation = MKPointAnnotation()
         annotation.coordinate = coordinates
         annotation.title = newActor.name
         annotation.subtitle = newActor.birthplace
@@ -102,8 +102,8 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
                             }
                             return
                         } else {
-                            let location = placeMark[0] as! CLPlacemark
-                            coordinate = location.location.coordinate
+                            let location = placeMark![0]
+                            coordinate = location.location!.coordinate
                             
                             // In case the actor has the same hometown as a previosuly picked actor - add small offset
                             for location in self.actors {
@@ -147,7 +147,7 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
     }
     
     /*------- MKMapViewDelegate Functionality -------*/
-    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
         
@@ -158,7 +158,7 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
             pinView!.pinColor = .Green
             pinView!.pinColor = .Red
             pinView!.canShowCallout = true
-            pinView!.rightCalloutAccessoryView = UIButton.buttonWithType(.DetailDisclosure) as! UIButton
+            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
         }
         else {
             pinView!.annotation = annotation
@@ -167,11 +167,11 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         return pinView
     }
     
-    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         if (self.editing) {
             
-            let lat = view.annotation.coordinate.latitude as Double
-            let long = view.annotation.coordinate.longitude as Double
+            let lat = view.annotation!.coordinate.latitude as Double
+            let long = view.annotation!.coordinate.longitude as Double
             
             var actorToDelete: Actor?
             var index = 0
@@ -189,18 +189,18 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
             sharedContext.deleteObject(actorToDelete!)
             CoreDataStackManager.sharedInstance().saveContext()
             
-            self.mapView.removeAnnotation(view.annotation)
+            self.mapView.removeAnnotation(view.annotation!)
         }
     }
     
-    func mapView(mapView: MKMapView!, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    func mapView(mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         
         if control == annotationView.rightCalloutAccessoryView {
             
             let controller = storyboard!.instantiateViewControllerWithIdentifier("ActorDetailViewController") as! ActorDetailViewController
             
-            let lat = annotationView.annotation.coordinate.latitude as Double
-            let long = annotationView.annotation.coordinate.longitude as Double
+            let lat = annotationView.annotation!.coordinate.latitude as Double
+            let long = annotationView.annotation!.coordinate.longitude as Double
             
             for actor in actors {
                 if actor.latitude == lat && actor.longitude == long {
@@ -211,7 +211,7 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         }
     }
     
-    func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         saveMapRegion()
     }
     
@@ -225,24 +225,19 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
     }
 
     func isConnectedToNetwork() -> Bool {
-        
-        var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
+        var zeroAddress = sockaddr_in()
         zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
         zeroAddress.sin_family = sa_family_t(AF_INET)
-        
         let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
-            SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0)).takeRetainedValue()
+            SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
         }
-        
-        var flags: SCNetworkReachabilityFlags = 0
-        if SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags) == 0 {
+        var flags = SCNetworkReachabilityFlags()
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) {
             return false
         }
-        
-        let isReachable = (flags & UInt32(kSCNetworkFlagsReachable)) != 0
-        let needsConnection = (flags & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
-        
-        return isReachable && !needsConnection
+        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
+        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
+        return (isReachable && !needsConnection)
     }
     
     /*------- NSKeyedArchiver Persistent Map Region Functionality -------*/
@@ -281,10 +276,16 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         
         let error: NSErrorPointer = nil
         let fetchRequest = NSFetchRequest(entityName: "Actor")
-        let results = sharedContext.executeFetchRequest(fetchRequest, error: error)
+        let results: [AnyObject]?
+        do {
+            results = try sharedContext.executeFetchRequest(fetchRequest)
+        } catch let error1 as NSError {
+            error.memory = error1
+            results = nil
+        }
         
         if error != nil {
-            println("Error in fectchAllActors(): \(error)")
+            print("Error in fectchAllActors(): \(error)")
         }
         
         return results as! [Actor]
@@ -294,7 +295,7 @@ class ActorMapViewController: UIViewController, ActorSearchViewControllerDelegat
         
         for actor in actors {
             let coordinates = CLLocationCoordinate2DMake(actor.latitude as! Double, actor.longitude as! Double)
-            var annotation = MKPointAnnotation()
+            let annotation = MKPointAnnotation()
             annotation.coordinate = coordinates
             annotation.title = actor.name
             annotation.subtitle = actor.birthplace
